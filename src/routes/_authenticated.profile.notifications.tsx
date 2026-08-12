@@ -57,9 +57,10 @@ function Notifications() {
 
   const update = useMutation({
     mutationFn: async ({ key, value }: { key: PrefKey; value: boolean }) => {
+      const patch = { [key]: value } as Record<PrefKey, boolean>;
       const { error } = await supabase
         .from("notification_preferences")
-        .update({ [key]: value })
+        .update(patch)
         .eq("user_id", user!.id);
       if (error) throw error;
     },

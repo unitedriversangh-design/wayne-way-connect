@@ -17,6 +17,7 @@ import { Route as AuthenticatedProfileIndexRouteImport } from './routes/_authent
 import { Route as AuthenticatedProfileDevicesRouteImport } from './routes/_authenticated.profile.devices'
 import { Route as AuthenticatedProfileEditRouteImport } from './routes/_authenticated.profile.edit'
 import { Route as AuthenticatedProfileEmergencyContactsRouteImport } from './routes/_authenticated.profile.emergency-contacts'
+import { Route as AuthenticatedProfileNotificationsRouteImport } from './routes/_authenticated.profile.notifications'
 import { Route as AuthenticatedProfileSavedPlacesRouteImport } from './routes/_authenticated.profile.saved-places'
 
 const IndexRoute = IndexRouteImport.update({
@@ -62,6 +63,12 @@ const AuthenticatedProfileEmergencyContactsRoute =
     path: '/profile/emergency-contacts',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedProfileNotificationsRoute =
+  AuthenticatedProfileNotificationsRouteImport.update({
+    id: '/profile/notifications',
+    path: '/profile/notifications',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedProfileSavedPlacesRoute =
   AuthenticatedProfileSavedPlacesRouteImport.update({
     id: '/profile/saved-places',
@@ -76,6 +83,7 @@ export interface FileRoutesByFullPath {
   '/profile/devices': typeof AuthenticatedProfileDevicesRoute
   '/profile/edit': typeof AuthenticatedProfileEditRoute
   '/profile/emergency-contacts': typeof AuthenticatedProfileEmergencyContactsRoute
+  '/profile/notifications': typeof AuthenticatedProfileNotificationsRoute
   '/profile/saved-places': typeof AuthenticatedProfileSavedPlacesRoute
   '/profile/': typeof AuthenticatedProfileIndexRoute
 }
@@ -86,6 +94,7 @@ export interface FileRoutesByTo {
   '/profile/devices': typeof AuthenticatedProfileDevicesRoute
   '/profile/edit': typeof AuthenticatedProfileEditRoute
   '/profile/emergency-contacts': typeof AuthenticatedProfileEmergencyContactsRoute
+  '/profile/notifications': typeof AuthenticatedProfileNotificationsRoute
   '/profile/saved-places': typeof AuthenticatedProfileSavedPlacesRoute
   '/profile': typeof AuthenticatedProfileIndexRoute
 }
@@ -98,6 +107,7 @@ export interface FileRoutesById {
   '/_authenticated/profile/devices': typeof AuthenticatedProfileDevicesRoute
   '/_authenticated/profile/edit': typeof AuthenticatedProfileEditRoute
   '/_authenticated/profile/emergency-contacts': typeof AuthenticatedProfileEmergencyContactsRoute
+  '/_authenticated/profile/notifications': typeof AuthenticatedProfileNotificationsRoute
   '/_authenticated/profile/saved-places': typeof AuthenticatedProfileSavedPlacesRoute
   '/_authenticated/profile/': typeof AuthenticatedProfileIndexRoute
 }
@@ -110,6 +120,7 @@ export interface FileRouteTypes {
     | '/profile/devices'
     | '/profile/edit'
     | '/profile/emergency-contacts'
+    | '/profile/notifications'
     | '/profile/saved-places'
     | '/profile/'
   fileRoutesByTo: FileRoutesByTo
@@ -120,6 +131,7 @@ export interface FileRouteTypes {
     | '/profile/devices'
     | '/profile/edit'
     | '/profile/emergency-contacts'
+    | '/profile/notifications'
     | '/profile/saved-places'
     | '/profile'
   id:
@@ -131,6 +143,7 @@ export interface FileRouteTypes {
     | '/_authenticated/profile/devices'
     | '/_authenticated/profile/edit'
     | '/_authenticated/profile/emergency-contacts'
+    | '/_authenticated/profile/notifications'
     | '/_authenticated/profile/saved-places'
     | '/_authenticated/profile/'
   fileRoutesById: FileRoutesById
@@ -199,6 +212,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileEmergencyContactsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/profile/notifications': {
+      id: '/_authenticated/profile/notifications'
+      path: '/profile/notifications'
+      fullPath: '/profile/notifications'
+      preLoaderRoute: typeof AuthenticatedProfileNotificationsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/profile/saved-places': {
       id: '/_authenticated/profile/saved-places'
       path: '/profile/saved-places'
@@ -214,6 +234,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedProfileDevicesRoute: typeof AuthenticatedProfileDevicesRoute
   AuthenticatedProfileEditRoute: typeof AuthenticatedProfileEditRoute
   AuthenticatedProfileEmergencyContactsRoute: typeof AuthenticatedProfileEmergencyContactsRoute
+  AuthenticatedProfileNotificationsRoute: typeof AuthenticatedProfileNotificationsRoute
   AuthenticatedProfileSavedPlacesRoute: typeof AuthenticatedProfileSavedPlacesRoute
   AuthenticatedProfileIndexRoute: typeof AuthenticatedProfileIndexRoute
 }
@@ -224,6 +245,8 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedProfileEditRoute: AuthenticatedProfileEditRoute,
   AuthenticatedProfileEmergencyContactsRoute:
     AuthenticatedProfileEmergencyContactsRoute,
+  AuthenticatedProfileNotificationsRoute:
+    AuthenticatedProfileNotificationsRoute,
   AuthenticatedProfileSavedPlacesRoute: AuthenticatedProfileSavedPlacesRoute,
   AuthenticatedProfileIndexRoute: AuthenticatedProfileIndexRoute,
 }
