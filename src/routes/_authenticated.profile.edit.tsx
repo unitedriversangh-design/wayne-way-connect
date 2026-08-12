@@ -81,7 +81,7 @@ function EditProfile() {
       if (error) throw error;
     },
     onSuccess: () => {
-      toast.success(t("common.saved"));
+      toast.success("Saved");
       void queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
     onError: (error: Error) => toast.error(error.message),
