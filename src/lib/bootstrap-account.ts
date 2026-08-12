@@ -20,7 +20,7 @@ export async function bootstrapAccount(userId: string, email: string | undefined
       id: userId,
       email: email ?? null,
       email_verified_at: new Date().toISOString(),
-      display_name: email ? email.split("@")[0] : null,
+      display_name: email ? (email.split("@")[0] ?? null) : null,
     });
     await supabase.from("notification_preferences").insert({ user_id: userId });
     await supabase.from("consent_records").insert([
