@@ -10,33 +10,187 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated.home'
+import { Route as AuthenticatedProfileIndexRouteImport } from './routes/_authenticated.profile.index'
+import { Route as AuthenticatedProfileDevicesRouteImport } from './routes/_authenticated.profile.devices'
+import { Route as AuthenticatedProfileEditRouteImport } from './routes/_authenticated.profile.edit'
+import { Route as AuthenticatedProfileEmergencyContactsRouteImport } from './routes/_authenticated.profile.emergency-contacts'
+import { Route as AuthenticatedProfileNotificationsRouteImport } from './routes/_authenticated.profile.notifications'
+import { Route as AuthenticatedProfilePrivacyDataRouteImport } from './routes/_authenticated.profile.privacy-data'
+import { Route as AuthenticatedProfileSavedPlacesRouteImport } from './routes/_authenticated.profile.saved-places'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedProfileIndexRoute =
+  AuthenticatedProfileIndexRouteImport.update({
+    id: '/profile/',
+    path: '/profile/',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedProfileDevicesRoute =
+  AuthenticatedProfileDevicesRouteImport.update({
+    id: '/profile/devices',
+    path: '/profile/devices',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedProfileEditRoute =
+  AuthenticatedProfileEditRouteImport.update({
+    id: '/profile/edit',
+    path: '/profile/edit',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedProfileEmergencyContactsRoute =
+  AuthenticatedProfileEmergencyContactsRouteImport.update({
+    id: '/profile/emergency-contacts',
+    path: '/profile/emergency-contacts',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedProfileNotificationsRoute =
+  AuthenticatedProfileNotificationsRouteImport.update({
+    id: '/profile/notifications',
+    path: '/profile/notifications',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedProfilePrivacyDataRoute =
+  AuthenticatedProfilePrivacyDataRouteImport.update({
+    id: '/profile/privacy-data',
+    path: '/profile/privacy-data',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedProfileSavedPlacesRoute =
+  AuthenticatedProfileSavedPlacesRouteImport.update({
+    id: '/profile/saved-places',
+    path: '/profile/saved-places',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
+  '/home': typeof AuthenticatedHomeRoute
+  '/profile/devices': typeof AuthenticatedProfileDevicesRoute
+  '/profile/edit': typeof AuthenticatedProfileEditRoute
+  '/profile/emergency-contacts': typeof AuthenticatedProfileEmergencyContactsRoute
+  '/profile/notifications': typeof AuthenticatedProfileNotificationsRoute
+  '/profile/privacy-data': typeof AuthenticatedProfilePrivacyDataRoute
+  '/profile/saved-places': typeof AuthenticatedProfileSavedPlacesRoute
+  '/profile/': typeof AuthenticatedProfileIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
+  '/home': typeof AuthenticatedHomeRoute
+  '/profile/devices': typeof AuthenticatedProfileDevicesRoute
+  '/profile/edit': typeof AuthenticatedProfileEditRoute
+  '/profile/emergency-contacts': typeof AuthenticatedProfileEmergencyContactsRoute
+  '/profile/notifications': typeof AuthenticatedProfileNotificationsRoute
+  '/profile/privacy-data': typeof AuthenticatedProfilePrivacyDataRoute
+  '/profile/saved-places': typeof AuthenticatedProfileSavedPlacesRoute
+  '/profile': typeof AuthenticatedProfileIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/privacy': typeof PrivacyRoute
+  '/terms': typeof TermsRoute
+  '/_authenticated/home': typeof AuthenticatedHomeRoute
+  '/_authenticated/profile/devices': typeof AuthenticatedProfileDevicesRoute
+  '/_authenticated/profile/edit': typeof AuthenticatedProfileEditRoute
+  '/_authenticated/profile/emergency-contacts': typeof AuthenticatedProfileEmergencyContactsRoute
+  '/_authenticated/profile/notifications': typeof AuthenticatedProfileNotificationsRoute
+  '/_authenticated/profile/privacy-data': typeof AuthenticatedProfilePrivacyDataRoute
+  '/_authenticated/profile/saved-places': typeof AuthenticatedProfileSavedPlacesRoute
+  '/_authenticated/profile/': typeof AuthenticatedProfileIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/privacy'
+    | '/terms'
+    | '/home'
+    | '/profile/devices'
+    | '/profile/edit'
+    | '/profile/emergency-contacts'
+    | '/profile/notifications'
+    | '/profile/privacy-data'
+    | '/profile/saved-places'
+    | '/profile/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/privacy'
+    | '/terms'
+    | '/home'
+    | '/profile/devices'
+    | '/profile/edit'
+    | '/profile/emergency-contacts'
+    | '/profile/notifications'
+    | '/profile/privacy-data'
+    | '/profile/saved-places'
+    | '/profile'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/privacy'
+    | '/terms'
+    | '/_authenticated/home'
+    | '/_authenticated/profile/devices'
+    | '/_authenticated/profile/edit'
+    | '/_authenticated/profile/emergency-contacts'
+    | '/_authenticated/profile/notifications'
+    | '/_authenticated/profile/privacy-data'
+    | '/_authenticated/profile/saved-places'
+    | '/_authenticated/profile/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  PrivacyRoute: typeof PrivacyRoute
+  TermsRoute: typeof TermsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +202,127 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/home': {
+      id: '/_authenticated/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof AuthenticatedHomeRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/profile/': {
+      id: '/_authenticated/profile/'
+      path: '/profile'
+      fullPath: '/profile/'
+      preLoaderRoute: typeof AuthenticatedProfileIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/profile/devices': {
+      id: '/_authenticated/profile/devices'
+      path: '/profile/devices'
+      fullPath: '/profile/devices'
+      preLoaderRoute: typeof AuthenticatedProfileDevicesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/profile/edit': {
+      id: '/_authenticated/profile/edit'
+      path: '/profile/edit'
+      fullPath: '/profile/edit'
+      preLoaderRoute: typeof AuthenticatedProfileEditRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/profile/emergency-contacts': {
+      id: '/_authenticated/profile/emergency-contacts'
+      path: '/profile/emergency-contacts'
+      fullPath: '/profile/emergency-contacts'
+      preLoaderRoute: typeof AuthenticatedProfileEmergencyContactsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/profile/notifications': {
+      id: '/_authenticated/profile/notifications'
+      path: '/profile/notifications'
+      fullPath: '/profile/notifications'
+      preLoaderRoute: typeof AuthenticatedProfileNotificationsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/profile/privacy-data': {
+      id: '/_authenticated/profile/privacy-data'
+      path: '/profile/privacy-data'
+      fullPath: '/profile/privacy-data'
+      preLoaderRoute: typeof AuthenticatedProfilePrivacyDataRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/profile/saved-places': {
+      id: '/_authenticated/profile/saved-places'
+      path: '/profile/saved-places'
+      fullPath: '/profile/saved-places'
+      preLoaderRoute: typeof AuthenticatedProfileSavedPlacesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
+interface AuthenticatedRouteChildren {
+  AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
+  AuthenticatedProfileDevicesRoute: typeof AuthenticatedProfileDevicesRoute
+  AuthenticatedProfileEditRoute: typeof AuthenticatedProfileEditRoute
+  AuthenticatedProfileEmergencyContactsRoute: typeof AuthenticatedProfileEmergencyContactsRoute
+  AuthenticatedProfileNotificationsRoute: typeof AuthenticatedProfileNotificationsRoute
+  AuthenticatedProfilePrivacyDataRoute: typeof AuthenticatedProfilePrivacyDataRoute
+  AuthenticatedProfileSavedPlacesRoute: typeof AuthenticatedProfileSavedPlacesRoute
+  AuthenticatedProfileIndexRoute: typeof AuthenticatedProfileIndexRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedHomeRoute: AuthenticatedHomeRoute,
+  AuthenticatedProfileDevicesRoute: AuthenticatedProfileDevicesRoute,
+  AuthenticatedProfileEditRoute: AuthenticatedProfileEditRoute,
+  AuthenticatedProfileEmergencyContactsRoute:
+    AuthenticatedProfileEmergencyContactsRoute,
+  AuthenticatedProfileNotificationsRoute:
+    AuthenticatedProfileNotificationsRoute,
+  AuthenticatedProfilePrivacyDataRoute: AuthenticatedProfilePrivacyDataRoute,
+  AuthenticatedProfileSavedPlacesRoute: AuthenticatedProfileSavedPlacesRoute,
+  AuthenticatedProfileIndexRoute: AuthenticatedProfileIndexRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  AuthRoute: AuthRoute,
+  PrivacyRoute: PrivacyRoute,
+  TermsRoute: TermsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
