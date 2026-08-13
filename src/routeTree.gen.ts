@@ -22,6 +22,7 @@ import { Route as AuthenticatedProfileEmergencyContactsRouteImport } from './rou
 import { Route as AuthenticatedProfileNotificationsRouteImport } from './routes/_authenticated.profile.notifications'
 import { Route as AuthenticatedProfilePrivacyDataRouteImport } from './routes/_authenticated.profile.privacy-data'
 import { Route as AuthenticatedProfileSavedPlacesRouteImport } from './routes/_authenticated.profile.saved-places'
+import { Route as AuthenticatedRideNewRouteImport } from './routes/_authenticated.ride.new'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -94,6 +95,11 @@ const AuthenticatedProfileSavedPlacesRoute =
     path: '/profile/saved-places',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedRideNewRoute = AuthenticatedRideNewRouteImport.update({
+  id: '/ride/new',
+  path: '/ride/new',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/profile/notifications': typeof AuthenticatedProfileNotificationsRoute
   '/profile/privacy-data': typeof AuthenticatedProfilePrivacyDataRoute
   '/profile/saved-places': typeof AuthenticatedProfileSavedPlacesRoute
+  '/ride/new': typeof AuthenticatedRideNewRoute
   '/profile/': typeof AuthenticatedProfileIndexRoute
 }
 export interface FileRoutesByTo {
@@ -121,6 +128,7 @@ export interface FileRoutesByTo {
   '/profile/notifications': typeof AuthenticatedProfileNotificationsRoute
   '/profile/privacy-data': typeof AuthenticatedProfilePrivacyDataRoute
   '/profile/saved-places': typeof AuthenticatedProfileSavedPlacesRoute
+  '/ride/new': typeof AuthenticatedRideNewRoute
   '/profile': typeof AuthenticatedProfileIndexRoute
 }
 export interface FileRoutesById {
@@ -137,6 +145,7 @@ export interface FileRoutesById {
   '/_authenticated/profile/notifications': typeof AuthenticatedProfileNotificationsRoute
   '/_authenticated/profile/privacy-data': typeof AuthenticatedProfilePrivacyDataRoute
   '/_authenticated/profile/saved-places': typeof AuthenticatedProfileSavedPlacesRoute
+  '/_authenticated/ride/new': typeof AuthenticatedRideNewRoute
   '/_authenticated/profile/': typeof AuthenticatedProfileIndexRoute
 }
 export interface FileRouteTypes {
@@ -153,6 +162,7 @@ export interface FileRouteTypes {
     | '/profile/notifications'
     | '/profile/privacy-data'
     | '/profile/saved-places'
+    | '/ride/new'
     | '/profile/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -167,6 +177,7 @@ export interface FileRouteTypes {
     | '/profile/notifications'
     | '/profile/privacy-data'
     | '/profile/saved-places'
+    | '/ride/new'
     | '/profile'
   id:
     | '__root__'
@@ -182,6 +193,7 @@ export interface FileRouteTypes {
     | '/_authenticated/profile/notifications'
     | '/_authenticated/profile/privacy-data'
     | '/_authenticated/profile/saved-places'
+    | '/_authenticated/ride/new'
     | '/_authenticated/profile/'
   fileRoutesById: FileRoutesById
 }
@@ -286,6 +298,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileSavedPlacesRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/ride/new': {
+      id: '/_authenticated/ride/new'
+      path: '/ride/new'
+      fullPath: '/ride/new'
+      preLoaderRoute: typeof AuthenticatedRideNewRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
@@ -297,6 +316,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedProfileNotificationsRoute: typeof AuthenticatedProfileNotificationsRoute
   AuthenticatedProfilePrivacyDataRoute: typeof AuthenticatedProfilePrivacyDataRoute
   AuthenticatedProfileSavedPlacesRoute: typeof AuthenticatedProfileSavedPlacesRoute
+  AuthenticatedRideNewRoute: typeof AuthenticatedRideNewRoute
   AuthenticatedProfileIndexRoute: typeof AuthenticatedProfileIndexRoute
 }
 
@@ -310,6 +330,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
     AuthenticatedProfileNotificationsRoute,
   AuthenticatedProfilePrivacyDataRoute: AuthenticatedProfilePrivacyDataRoute,
   AuthenticatedProfileSavedPlacesRoute: AuthenticatedProfileSavedPlacesRoute,
+  AuthenticatedRideNewRoute: AuthenticatedRideNewRoute,
   AuthenticatedProfileIndexRoute: AuthenticatedProfileIndexRoute,
 }
 
