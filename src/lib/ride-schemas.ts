@@ -51,3 +51,7 @@ export const completeRideSchema = bookingIdSchema.extend({
   finalDistanceMetres: z.number().int().min(0).max(500_000).optional(),
   finalDurationSeconds: z.number().int().min(0).max(86_400).optional(),
 });
+
+export const placeSearchSchema = z.object({
+  query: z.string().min(3).max(120),
+});

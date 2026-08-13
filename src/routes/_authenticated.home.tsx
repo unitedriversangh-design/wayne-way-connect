@@ -6,8 +6,9 @@ import { useSession } from "@/lib/session";
 import { useI18n } from "@/lib/i18n";
 import { AppShell } from "@/components/app-shell";
 import { SectionCard } from "@/components/ui-kit";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { listCustomerRides } from "@/lib/ride.functions";
+import { formatMoney, isActive, STATUS_LABEL, type BookingStatus } from "@/lib/ride-shared";
+
 
 export const Route = createFileRoute("/_authenticated/home")({
   head: () => ({
@@ -62,6 +63,14 @@ function HomePage() {
     },
   });
 
+  const rides = useQuery({
+    queryKey: ["customer_rides"],
+    enabled: !!user,
+    queryFn: () => listCustomerRides(),
+    refetchInterval: 10000,
+  });
+
+  const activeRide = rides.data?.find((ride) => isActive(ride.status as BookingStatus));
   const name = profile.data?.first_name ?? profile.data?.display_name ?? "traveller";
 
   return (
@@ -69,33 +78,58 @@ function HomePage() {
       <p className="text-sm text-muted-foreground">{t("home.greeting")},</p>
       <h1 className="text-2xl font-bold">{name}</h1>
 
-      <SectionCard className="mt-5" title={t("home.whereTo")}>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div className="space-y-1.5">
-            <Label htmlFor="from">{t("home.from")}</Label>
-            <Input id="from" placeholder="Pickup point" className="h-11" disabled />
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="to">{t("home.to")}</Label>
-            <Input id="to" placeholder="Destination" className="h-11" disabled />
-          </div>
-        </div>
+      {activeRide ? (
+        <SectionCard className="mt-5" title="Ride in progress">
+          <p className="text-sm font-semibold">
+            {STATUS_LABEL[activeRide.status as BookingStatus]}
+          </p>
+          <p className="mt-1 truncate text-sm text-muted-foreground">
+            To {activeRide.destination_address}
+          </p>
+          <Link
+            to="/ride/$bookingId"
+            params={{ bookingId: activeRide.id }}
+            className="focus-ring mt-3 inline-block rounded-full bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground"
+          >
+            View ride
+          </Link>
+        </SectionCard>
+      ) : null}
+
+      <SectionCard className="mt-4" title={t("home.whereTo")}>
+        <Link
+          to="/ride/new"
+          className="focus-ring flex min-h-12 items-center rounded-xl border border-border bg-muted/50 px-4 text-sm font-semibold text-muted-foreground"
+        >
+          Enter pickup and destination
+        </Link>
         <div className="mt-4 flex gap-2">
-          {services.map((service) => (
-            <span
-              key={service.name}
-              className="flex flex-1 flex-col items-center gap-1 rounded-xl border border-border bg-muted/50 py-3 text-xs font-semibold text-muted-foreground"
-            >
-              <service.icon className="size-5" aria-hidden />
-              {service.name}
-            </span>
-          ))}
+          {services.map((service) =>
+            service.name === "Bike" ? (
+              <Link
+                key={service.name}
+                to="/ride/new"
+                className="focus-ring flex flex-1 flex-col items-center gap-1 rounded-xl border border-primary/40 bg-primary/5 py-3 text-xs font-semibold text-primary"
+              >
+                <service.icon className="size-5" aria-hidden />
+                {service.name}
+              </Link>
+            ) : (
+              <span
+                key={service.name}
+                className="flex flex-1 flex-col items-center gap-1 rounded-xl border border-border bg-muted/50 py-3 text-xs font-semibold text-muted-foreground"
+              >
+                <service.icon className="size-5" aria-hidden />
+                {service.name}
+              </span>
+            ),
+          )}
         </div>
         <p className="mt-3 text-xs text-muted-foreground">
-          Search and booking are not built yet — they arrive with the booking phase. Nothing here
-          reserves a ride or takes a payment.
+          Bike rides are live. Auto and Bus arrive in later phases.
         </p>
       </SectionCard>
+
 
       <SectionCard
         className="mt-4"

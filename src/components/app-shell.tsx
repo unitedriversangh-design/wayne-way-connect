@@ -1,5 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, User } from "lucide-react";
+import { Bike, Home, ScrollText, User } from "lucide-react";
+
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/lib/i18n";
@@ -21,8 +22,11 @@ export function AppShell({
 
   const items = [
     { to: "/home", label: t("nav.home"), icon: Home },
+    { to: "/rides", label: "Rides", icon: ScrollText },
+    { to: "/drive", label: "Drive", icon: Bike },
     { to: "/profile", label: t("nav.profile"), icon: User },
   ];
+
 
   return (
     <div className="flex min-h-screen flex-col bg-background">

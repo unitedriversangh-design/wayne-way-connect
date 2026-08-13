@@ -15,6 +15,9 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated.home'
+import { Route as AuthenticatedRidesRouteImport } from './routes/_authenticated.rides'
+import { Route as AuthenticatedDriveIndexRouteImport } from './routes/_authenticated.drive.index'
+import { Route as AuthenticatedDriveRidesRouteImport } from './routes/_authenticated.drive.rides'
 import { Route as AuthenticatedProfileIndexRouteImport } from './routes/_authenticated.profile.index'
 import { Route as AuthenticatedProfileDevicesRouteImport } from './routes/_authenticated.profile.devices'
 import { Route as AuthenticatedProfileEditRouteImport } from './routes/_authenticated.profile.edit'
@@ -22,6 +25,8 @@ import { Route as AuthenticatedProfileEmergencyContactsRouteImport } from './rou
 import { Route as AuthenticatedProfileNotificationsRouteImport } from './routes/_authenticated.profile.notifications'
 import { Route as AuthenticatedProfilePrivacyDataRouteImport } from './routes/_authenticated.profile.privacy-data'
 import { Route as AuthenticatedProfileSavedPlacesRouteImport } from './routes/_authenticated.profile.saved-places'
+import { Route as AuthenticatedRideBookingIdRouteImport } from './routes/_authenticated.ride.$bookingId'
+import { Route as AuthenticatedRideNewRouteImport } from './routes/_authenticated.ride.new'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -50,6 +55,21 @@ const TermsRoute = TermsRouteImport.update({
 const AuthenticatedHomeRoute = AuthenticatedHomeRouteImport.update({
   id: '/home',
   path: '/home',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedRidesRoute = AuthenticatedRidesRouteImport.update({
+  id: '/rides',
+  path: '/rides',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedDriveIndexRoute = AuthenticatedDriveIndexRouteImport.update({
+  id: '/drive/',
+  path: '/drive/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedDriveRidesRoute = AuthenticatedDriveRidesRouteImport.update({
+  id: '/drive/rides',
+  path: '/drive/rides',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedProfileIndexRoute =
@@ -94,6 +114,17 @@ const AuthenticatedProfileSavedPlacesRoute =
     path: '/profile/saved-places',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedRideBookingIdRoute =
+  AuthenticatedRideBookingIdRouteImport.update({
+    id: '/ride/$bookingId',
+    path: '/ride/$bookingId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedRideNewRoute = AuthenticatedRideNewRouteImport.update({
+  id: '/ride/new',
+  path: '/ride/new',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -101,12 +132,17 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/home': typeof AuthenticatedHomeRoute
+  '/rides': typeof AuthenticatedRidesRoute
+  '/drive/rides': typeof AuthenticatedDriveRidesRoute
   '/profile/devices': typeof AuthenticatedProfileDevicesRoute
   '/profile/edit': typeof AuthenticatedProfileEditRoute
   '/profile/emergency-contacts': typeof AuthenticatedProfileEmergencyContactsRoute
   '/profile/notifications': typeof AuthenticatedProfileNotificationsRoute
   '/profile/privacy-data': typeof AuthenticatedProfilePrivacyDataRoute
   '/profile/saved-places': typeof AuthenticatedProfileSavedPlacesRoute
+  '/ride/$bookingId': typeof AuthenticatedRideBookingIdRoute
+  '/ride/new': typeof AuthenticatedRideNewRoute
+  '/drive/': typeof AuthenticatedDriveIndexRoute
   '/profile/': typeof AuthenticatedProfileIndexRoute
 }
 export interface FileRoutesByTo {
@@ -115,12 +151,17 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/home': typeof AuthenticatedHomeRoute
+  '/rides': typeof AuthenticatedRidesRoute
+  '/drive/rides': typeof AuthenticatedDriveRidesRoute
   '/profile/devices': typeof AuthenticatedProfileDevicesRoute
   '/profile/edit': typeof AuthenticatedProfileEditRoute
   '/profile/emergency-contacts': typeof AuthenticatedProfileEmergencyContactsRoute
   '/profile/notifications': typeof AuthenticatedProfileNotificationsRoute
   '/profile/privacy-data': typeof AuthenticatedProfilePrivacyDataRoute
   '/profile/saved-places': typeof AuthenticatedProfileSavedPlacesRoute
+  '/ride/$bookingId': typeof AuthenticatedRideBookingIdRoute
+  '/ride/new': typeof AuthenticatedRideNewRoute
+  '/drive': typeof AuthenticatedDriveIndexRoute
   '/profile': typeof AuthenticatedProfileIndexRoute
 }
 export interface FileRoutesById {
@@ -131,12 +172,17 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/terms': typeof TermsRoute
   '/_authenticated/home': typeof AuthenticatedHomeRoute
+  '/_authenticated/rides': typeof AuthenticatedRidesRoute
+  '/_authenticated/drive/rides': typeof AuthenticatedDriveRidesRoute
   '/_authenticated/profile/devices': typeof AuthenticatedProfileDevicesRoute
   '/_authenticated/profile/edit': typeof AuthenticatedProfileEditRoute
   '/_authenticated/profile/emergency-contacts': typeof AuthenticatedProfileEmergencyContactsRoute
   '/_authenticated/profile/notifications': typeof AuthenticatedProfileNotificationsRoute
   '/_authenticated/profile/privacy-data': typeof AuthenticatedProfilePrivacyDataRoute
   '/_authenticated/profile/saved-places': typeof AuthenticatedProfileSavedPlacesRoute
+  '/_authenticated/ride/$bookingId': typeof AuthenticatedRideBookingIdRoute
+  '/_authenticated/ride/new': typeof AuthenticatedRideNewRoute
+  '/_authenticated/drive/': typeof AuthenticatedDriveIndexRoute
   '/_authenticated/profile/': typeof AuthenticatedProfileIndexRoute
 }
 export interface FileRouteTypes {
@@ -147,12 +193,17 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/home'
+    | '/rides'
+    | '/drive/rides'
     | '/profile/devices'
     | '/profile/edit'
     | '/profile/emergency-contacts'
     | '/profile/notifications'
     | '/profile/privacy-data'
     | '/profile/saved-places'
+    | '/ride/$bookingId'
+    | '/ride/new'
+    | '/drive/'
     | '/profile/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -161,12 +212,17 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/home'
+    | '/rides'
+    | '/drive/rides'
     | '/profile/devices'
     | '/profile/edit'
     | '/profile/emergency-contacts'
     | '/profile/notifications'
     | '/profile/privacy-data'
     | '/profile/saved-places'
+    | '/ride/$bookingId'
+    | '/ride/new'
+    | '/drive'
     | '/profile'
   id:
     | '__root__'
@@ -176,12 +232,17 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/terms'
     | '/_authenticated/home'
+    | '/_authenticated/rides'
+    | '/_authenticated/drive/rides'
     | '/_authenticated/profile/devices'
     | '/_authenticated/profile/edit'
     | '/_authenticated/profile/emergency-contacts'
     | '/_authenticated/profile/notifications'
     | '/_authenticated/profile/privacy-data'
     | '/_authenticated/profile/saved-places'
+    | '/_authenticated/ride/$bookingId'
+    | '/_authenticated/ride/new'
+    | '/_authenticated/drive/'
     | '/_authenticated/profile/'
   fileRoutesById: FileRoutesById
 }
@@ -237,6 +298,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedHomeRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/rides': {
+      id: '/_authenticated/rides'
+      path: '/rides'
+      fullPath: '/rides'
+      preLoaderRoute: typeof AuthenticatedRidesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/drive/': {
+      id: '/_authenticated/drive/'
+      path: '/drive'
+      fullPath: '/drive/'
+      preLoaderRoute: typeof AuthenticatedDriveIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/drive/rides': {
+      id: '/_authenticated/drive/rides'
+      path: '/drive/rides'
+      fullPath: '/drive/rides'
+      preLoaderRoute: typeof AuthenticatedDriveRidesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/profile/': {
       id: '/_authenticated/profile/'
       path: '/profile'
@@ -286,22 +368,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProfileSavedPlacesRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/ride/$bookingId': {
+      id: '/_authenticated/ride/$bookingId'
+      path: '/ride/$bookingId'
+      fullPath: '/ride/$bookingId'
+      preLoaderRoute: typeof AuthenticatedRideBookingIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/ride/new': {
+      id: '/_authenticated/ride/new'
+      path: '/ride/new'
+      fullPath: '/ride/new'
+      preLoaderRoute: typeof AuthenticatedRideNewRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
 interface AuthenticatedRouteChildren {
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
+  AuthenticatedRidesRoute: typeof AuthenticatedRidesRoute
+  AuthenticatedDriveRidesRoute: typeof AuthenticatedDriveRidesRoute
   AuthenticatedProfileDevicesRoute: typeof AuthenticatedProfileDevicesRoute
   AuthenticatedProfileEditRoute: typeof AuthenticatedProfileEditRoute
   AuthenticatedProfileEmergencyContactsRoute: typeof AuthenticatedProfileEmergencyContactsRoute
   AuthenticatedProfileNotificationsRoute: typeof AuthenticatedProfileNotificationsRoute
   AuthenticatedProfilePrivacyDataRoute: typeof AuthenticatedProfilePrivacyDataRoute
   AuthenticatedProfileSavedPlacesRoute: typeof AuthenticatedProfileSavedPlacesRoute
+  AuthenticatedRideBookingIdRoute: typeof AuthenticatedRideBookingIdRoute
+  AuthenticatedRideNewRoute: typeof AuthenticatedRideNewRoute
+  AuthenticatedDriveIndexRoute: typeof AuthenticatedDriveIndexRoute
   AuthenticatedProfileIndexRoute: typeof AuthenticatedProfileIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,
+  AuthenticatedRidesRoute: AuthenticatedRidesRoute,
+  AuthenticatedDriveRidesRoute: AuthenticatedDriveRidesRoute,
   AuthenticatedProfileDevicesRoute: AuthenticatedProfileDevicesRoute,
   AuthenticatedProfileEditRoute: AuthenticatedProfileEditRoute,
   AuthenticatedProfileEmergencyContactsRoute:
@@ -310,6 +413,9 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
     AuthenticatedProfileNotificationsRoute,
   AuthenticatedProfilePrivacyDataRoute: AuthenticatedProfilePrivacyDataRoute,
   AuthenticatedProfileSavedPlacesRoute: AuthenticatedProfileSavedPlacesRoute,
+  AuthenticatedRideBookingIdRoute: AuthenticatedRideBookingIdRoute,
+  AuthenticatedRideNewRoute: AuthenticatedRideNewRoute,
+  AuthenticatedDriveIndexRoute: AuthenticatedDriveIndexRoute,
   AuthenticatedProfileIndexRoute: AuthenticatedProfileIndexRoute,
 }
 

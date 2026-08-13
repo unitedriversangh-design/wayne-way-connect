@@ -9,8 +9,10 @@ import {
   driverLocationSchema,
   driverRegistrationSchema,
   estimateSchema,
+  placeSearchSchema,
   startRideSchema,
 } from "./ride-schemas";
+import { haversineKm } from "./ride-shared";
 import type { BookingStatus, FareSnapshot } from "./ride-shared";
 
 /** Bike service availability plus the live fare configuration. */
@@ -42,8 +44,7 @@ export const estimateBikeRide = createServerFn({ method: "POST" })
     const [service, fare] = await Promise.all([R.getServiceConfig("BIKE"), R.getFareConfig("BIKE")]);
     if (!service.is_enabled) throw R.rideError("SERVICE_UNAVAILABLE");
 
-    const straightMetres =
-      R.haversineKmOf(data.pickup, data.destination) * 1000;
+    const straightMetres = haversineKm(data.pickup, data.destination) * 1000;
     if (straightMetres < service.min_trip_distance_metres) {
       throw R.rideError("PICKUP_TOO_CLOSE");
     }
@@ -82,7 +83,7 @@ export const createBikeBooking = createServerFn({ method: "POST" })
     const [service, fare] = await Promise.all([R.getServiceConfig("BIKE"), R.getFareConfig("BIKE")]);
     if (!service.is_enabled) throw R.rideError("SERVICE_UNAVAILABLE");
 
-    const straightMetres = R.haversineKmOf(data.pickup, data.destination) * 1000;
+    const straightMetres = haversineKm(data.pickup, data.destination) * 1000;
     if (straightMetres < service.min_trip_distance_metres) throw R.rideError("PICKUP_TOO_CLOSE");
 
     const route = await R.calculateRoute(data.pickup, data.destination, fare);
@@ -316,7 +317,6 @@ export const getDriverContext = createServerFn({ method: "GET" })
         .maybeSingle(),
     ]);
 
-    let currentRide = null as null | Record<string, unknown>;
     const { data: active } = await supabaseAdmin
       .from("bookings")
       .select(
@@ -327,13 +327,11 @@ export const getDriverContext = createServerFn({ method: "GET" })
       .order("accepted_at", { ascending: false })
       .limit(1)
       .maybeSingle();
-    if (active) currentRide = active;
-
     return {
       profile: profile ?? null,
       vehicle: vehicle ?? null,
       availability: availability ?? null,
-      currentRide,
+      currentRide: active ?? null,
     };
   });
 
@@ -845,4 +843,36 @@ export const listDriverRides = createServerFn({ method: "GET" })
       .limit(50);
     if (error) throw new Error("INVALID_RIDE_STATE");
     return data ?? [];
+  });
+
+/**
+ * Address lookup for pickup/destination selection. Runs server-side so the
+ * geocoding provider stays configurable and is never called from the browser.
+ */
+export const searchPlaces = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => placeSearchSchema.parse(input))
+  .handler(async ({ data }) => {
+    const base = process.env["GEOCODER_URL"] ?? "https://nominatim.openstreetmap.org/search";
+    const url = `${base}?format=json&addressdetails=0&limit=6&countrycodes=in&q=${encodeURIComponent(data.query)}`;
+    try {
+      const response = await fetch(url, {
+        headers: { "User-Agent": "WayneWay/0.1 (ride booking)", Accept: "application/json" },
+        signal: AbortSignal.timeout(6000),
+      });
+      if (!response.ok) return { results: [] as { label: string; latitude: number; longitude: number }[] };
+      const body = (await response.json()) as { display_name: string; lat: string; lon: string }[];
+      return {
+        results: body
+          .map((row) => ({
+            label: row.display_name,
+            latitude: Number(row.lat),
+            longitude: Number(row.lon),
+          }))
+          .filter((row) => Number.isFinite(row.latitude) && Number.isFinite(row.longitude)),
+      };
+    } catch (error) {
+      console.error("[ride] place search failed", error);
+      return { results: [] as { label: string; latitude: number; longitude: number }[] };
+    }
   });
