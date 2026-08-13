@@ -11,6 +11,7 @@ import {
   estimateSchema,
   startRideSchema,
 } from "./ride-schemas";
+import { haversineKm } from "./ride-shared";
 import type { BookingStatus, FareSnapshot } from "./ride-shared";
 
 /** Bike service availability plus the live fare configuration. */
@@ -42,7 +43,7 @@ export const estimateBikeRide = createServerFn({ method: "POST" })
     const [service, fare] = await Promise.all([R.getServiceConfig("BIKE"), R.getFareConfig("BIKE")]);
     if (!service.is_enabled) throw R.rideError("SERVICE_UNAVAILABLE");
 
-    const straightMetres = R.haversineKm(data.pickup, data.destination) * 1000;
+    const straightMetres = haversineKm(data.pickup, data.destination) * 1000;
     if (straightMetres < service.min_trip_distance_metres) {
       throw R.rideError("PICKUP_TOO_CLOSE");
     }
@@ -81,7 +82,7 @@ export const createBikeBooking = createServerFn({ method: "POST" })
     const [service, fare] = await Promise.all([R.getServiceConfig("BIKE"), R.getFareConfig("BIKE")]);
     if (!service.is_enabled) throw R.rideError("SERVICE_UNAVAILABLE");
 
-    const straightMetres = R.haversineKm(data.pickup, data.destination) * 1000;
+    const straightMetres = haversineKm(data.pickup, data.destination) * 1000;
     if (straightMetres < service.min_trip_distance_metres) throw R.rideError("PICKUP_TOO_CLOSE");
 
     const route = await R.calculateRoute(data.pickup, data.destination, fare);
