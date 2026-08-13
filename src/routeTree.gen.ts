@@ -17,6 +17,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated.home'
 import { Route as AuthenticatedRidesRouteImport } from './routes/_authenticated.rides'
 import { Route as AuthenticatedDriveIndexRouteImport } from './routes/_authenticated.drive.index'
+import { Route as AuthenticatedDriveRidesRouteImport } from './routes/_authenticated.drive.rides'
 import { Route as AuthenticatedProfileIndexRouteImport } from './routes/_authenticated.profile.index'
 import { Route as AuthenticatedProfileDevicesRouteImport } from './routes/_authenticated.profile.devices'
 import { Route as AuthenticatedProfileEditRouteImport } from './routes/_authenticated.profile.edit'
@@ -64,6 +65,11 @@ const AuthenticatedRidesRoute = AuthenticatedRidesRouteImport.update({
 const AuthenticatedDriveIndexRoute = AuthenticatedDriveIndexRouteImport.update({
   id: '/drive/',
   path: '/drive/',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedDriveRidesRoute = AuthenticatedDriveRidesRouteImport.update({
+  id: '/drive/rides',
+  path: '/drive/rides',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedProfileIndexRoute =
@@ -127,6 +133,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/home': typeof AuthenticatedHomeRoute
   '/rides': typeof AuthenticatedRidesRoute
+  '/drive/rides': typeof AuthenticatedDriveRidesRoute
   '/profile/devices': typeof AuthenticatedProfileDevicesRoute
   '/profile/edit': typeof AuthenticatedProfileEditRoute
   '/profile/emergency-contacts': typeof AuthenticatedProfileEmergencyContactsRoute
@@ -145,6 +152,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/home': typeof AuthenticatedHomeRoute
   '/rides': typeof AuthenticatedRidesRoute
+  '/drive/rides': typeof AuthenticatedDriveRidesRoute
   '/profile/devices': typeof AuthenticatedProfileDevicesRoute
   '/profile/edit': typeof AuthenticatedProfileEditRoute
   '/profile/emergency-contacts': typeof AuthenticatedProfileEmergencyContactsRoute
@@ -165,6 +173,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/_authenticated/home': typeof AuthenticatedHomeRoute
   '/_authenticated/rides': typeof AuthenticatedRidesRoute
+  '/_authenticated/drive/rides': typeof AuthenticatedDriveRidesRoute
   '/_authenticated/profile/devices': typeof AuthenticatedProfileDevicesRoute
   '/_authenticated/profile/edit': typeof AuthenticatedProfileEditRoute
   '/_authenticated/profile/emergency-contacts': typeof AuthenticatedProfileEmergencyContactsRoute
@@ -185,6 +194,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/home'
     | '/rides'
+    | '/drive/rides'
     | '/profile/devices'
     | '/profile/edit'
     | '/profile/emergency-contacts'
@@ -203,6 +213,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/home'
     | '/rides'
+    | '/drive/rides'
     | '/profile/devices'
     | '/profile/edit'
     | '/profile/emergency-contacts'
@@ -222,6 +233,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/_authenticated/home'
     | '/_authenticated/rides'
+    | '/_authenticated/drive/rides'
     | '/_authenticated/profile/devices'
     | '/_authenticated/profile/edit'
     | '/_authenticated/profile/emergency-contacts'
@@ -300,6 +312,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDriveIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/drive/rides': {
+      id: '/_authenticated/drive/rides'
+      path: '/drive/rides'
+      fullPath: '/drive/rides'
+      preLoaderRoute: typeof AuthenticatedDriveRidesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/profile/': {
       id: '/_authenticated/profile/'
       path: '/profile'
@@ -369,6 +388,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
   AuthenticatedRidesRoute: typeof AuthenticatedRidesRoute
+  AuthenticatedDriveRidesRoute: typeof AuthenticatedDriveRidesRoute
   AuthenticatedProfileDevicesRoute: typeof AuthenticatedProfileDevicesRoute
   AuthenticatedProfileEditRoute: typeof AuthenticatedProfileEditRoute
   AuthenticatedProfileEmergencyContactsRoute: typeof AuthenticatedProfileEmergencyContactsRoute
@@ -384,6 +404,7 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,
   AuthenticatedRidesRoute: AuthenticatedRidesRoute,
+  AuthenticatedDriveRidesRoute: AuthenticatedDriveRidesRoute,
   AuthenticatedProfileDevicesRoute: AuthenticatedProfileDevicesRoute,
   AuthenticatedProfileEditRoute: AuthenticatedProfileEditRoute,
   AuthenticatedProfileEmergencyContactsRoute:
