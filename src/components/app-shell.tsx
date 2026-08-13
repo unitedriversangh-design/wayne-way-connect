@@ -22,8 +22,11 @@ export function AppShell({
 
   const items = [
     { to: "/home", label: t("nav.home"), icon: Home },
+    { to: "/rides", label: "Rides", icon: ScrollText },
+    { to: "/drive", label: "Drive", icon: Bike },
     { to: "/profile", label: t("nav.profile"), icon: User },
   ];
+
 
   return (
     <div className="flex min-h-screen flex-col bg-background">
