@@ -320,13 +320,7 @@ export async function transition(input: {
 
 // ---------------------------------------------------------------- driver state
 
-export async function setDriverBusy(driverId: string, bookingId: string) {
-  await supabaseAdmin
-    .from("driver_availability")
-    .update({ status: "BUSY", current_booking_id: bookingId, last_seen_at: new Date().toISOString() })
-    .eq("driver_id", driverId);
-}
-
+/** Returns the driver to an available state after a ride ends or is released. */
 export async function releaseDriver(driverId: string) {
   await supabaseAdmin
     .from("driver_availability")

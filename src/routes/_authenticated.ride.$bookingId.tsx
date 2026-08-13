@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
@@ -43,15 +43,27 @@ const CANCELLABLE: BookingStatus[] = [
 function RidePage() {
   const { bookingId } = Route.useParams();
   const queryClient = useQueryClient();
-  const [offline, setOffline] = useState(false);
+  const [offline, setOffline] = useState(
+    () => typeof navigator !== "undefined" && !navigator.onLine,
+  );
   const fetchBooking = useServerFn(getCustomerBooking);
   const cancelFn = useServerFn(cancelBooking);
+
+  useEffect(() => {
+    const handleOffline = () => setOffline(true);
+    const handleOnline = () => setOffline(false);
+    window.addEventListener("offline", handleOffline);
+    window.addEventListener("online", handleOnline);
+    return () => {
+      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener("online", handleOnline);
+    };
+  }, []);
 
   const ride = useQuery({
     queryKey: ["booking", bookingId],
     queryFn: async () => {
       const result = await fetchBooking({ data: { bookingId } });
-      setOffline(false);
       return result;
     },
     refetchInterval: (query) => {
@@ -72,7 +84,7 @@ function RidePage() {
 
   if (ride.isLoading) {
     return (
-      <AppShell title="Your ride" back={{ to: "/home" }}>
+      <AppShell title="Your ride" back={{ to: "/rides" }}>
         <p className="text-sm text-muted-foreground">Loading your ride…</p>
       </AppShell>
     );
@@ -80,7 +92,7 @@ function RidePage() {
 
   if (ride.isError) {
     return (
-      <AppShell title="Your ride" back={{ to: "/home" }}>
+      <AppShell title="Your ride" back={{ to: "/rides" }}>
         <ErrorState message={rideErrorMessage(ride.error)} onRetry={() => ride.refetch()} />
       </AppShell>
     );

@@ -663,7 +663,6 @@ export const markDriverArrived = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => bookingIdSchema.parse(input))
   .handler(async ({ data, context }) => {
     const R = await import("./ride.server");
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const booking = await R.loadBooking(data.bookingId, context.userId, "DRIVER");
     if (booking.status === "DRIVER_ARRIVED") return { ok: true, alreadyArrived: true };
 
@@ -689,7 +688,6 @@ export const markDriverArrived = createServerFn({ method: "POST" })
       eventType: "driver_arrived",
     });
 
-    void supabaseAdmin; // admin client already used through helpers
     return { ok: true };
   });
 

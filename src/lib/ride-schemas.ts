@@ -47,10 +47,8 @@ export const startRideSchema = bookingIdSchema.extend({
   otp: z.string().regex(/^\d{6}$/),
 });
 
-export const completeRideSchema = bookingIdSchema.extend({
-  finalDistanceMetres: z.number().int().min(0).max(500_000).optional(),
-  finalDurationSeconds: z.number().int().min(0).max(86_400).optional(),
-});
+/** Driver marks the ride complete; the server fixes the final distance and fare. */
+export const completeRideSchema = bookingIdSchema;
 
 export const placeSearchSchema = z.object({
   query: z.string().min(3).max(120),

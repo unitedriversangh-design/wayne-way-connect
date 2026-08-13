@@ -27,6 +27,8 @@ export const Route = createFileRoute("/_authenticated/profile/emergency-contacts
   component: EmergencyContacts,
 });
 
+const MAX_CONTACTS = 5;
+
 function EmergencyContacts() {
   const { t } = useI18n();
   const queryClient = useQueryClient();
@@ -49,6 +51,8 @@ function EmergencyContacts() {
     },
   });
 
+  const contactCount = contacts.data?.length ?? 0;
+
   const add = useMutation({
     mutationFn: async () => {
       const phone = form.phone_number.replace(/\D/g, "");
@@ -70,7 +74,13 @@ function EmergencyContacts() {
       toast.success("Contact added");
       void queryClient.invalidateQueries({ queryKey: ["emergency_contacts"] });
     },
-    onError: (error: Error) => toast.error(error.message),
+    onError: (error: Error) => {
+      toast.error(
+        error.message.includes("emergency_contact_limit_reached")
+          ? `You can keep up to ${MAX_CONTACTS} emergency contacts. Remove one before adding another.`
+          : error.message,
+      );
+    },
   });
 
   const remove = useMutation({
@@ -87,7 +97,10 @@ function EmergencyContacts() {
 
   return (
     <AppShell title={t("profile.emergency")} back={{ to: "/profile" }}>
-      <SectionCard title="Your contacts" description="Up to five contacts, enforced by the server.">
+      <SectionCard
+        title="Your contacts"
+        description={`Up to ${MAX_CONTACTS} contacts, enforced by the server.`}
+      >
         {contacts.isLoading ? (
           <p className="text-sm text-muted-foreground">{t("common.loading")}</p>
         ) : contacts.data && contacts.data.length > 0 ? (
@@ -122,55 +135,62 @@ function EmergencyContacts() {
       </SectionCard>
 
       <SectionCard className="mt-4" title="Add a contact">
-        <form
-          className="space-y-4"
-          onSubmit={(e) => {
-            e.preventDefault();
-            add.mutate();
-          }}
-        >
-          <div className="space-y-1.5">
-            <Label htmlFor="contact-name">Name</Label>
-            <Input
-              id="contact-name"
-              value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="h-11"
-            />
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="relationship">Relationship</Label>
-            <Input
-              id="relationship"
-              value={form.relationship}
-              onChange={(e) => setForm({ ...form, relationship: e.target.value })}
-              placeholder="Parent, sibling, friend"
-              className="h-11"
-            />
-          </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="contact-phone">Mobile number</Label>
-            <div className="flex gap-2">
+        {contactCount >= MAX_CONTACTS ? (
+          <p className="text-sm text-muted-foreground">
+            You've reached the limit of {MAX_CONTACTS} emergency contacts.
+            Remove one to add another.
+          </p>
+        ) : (
+          <form
+            className="space-y-4"
+            onSubmit={(e) => {
+              e.preventDefault();
+              add.mutate();
+            }}
+          >
+            <div className="space-y-1.5">
+              <Label htmlFor="contact-name">Name</Label>
               <Input
-                aria-label="Country code"
-                value={form.country_code}
-                onChange={(e) => setForm({ ...form, country_code: e.target.value })}
-                className="h-11 w-20"
-              />
-              <Input
-                id="contact-phone"
-                inputMode="numeric"
-                value={form.phone_number}
-                onChange={(e) => setForm({ ...form, phone_number: e.target.value })}
-                placeholder="9876543210"
-                className="h-11 flex-1"
+                id="contact-name"
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+                className="h-11"
               />
             </div>
-          </div>
-          <Button type="submit" disabled={add.isPending} className="h-11 w-full">
-            {add.isPending ? t("common.loading") : t("common.add")}
-          </Button>
-        </form>
+            <div className="space-y-1.5">
+              <Label htmlFor="relationship">Relationship</Label>
+              <Input
+                id="relationship"
+                value={form.relationship}
+                onChange={(e) => setForm({ ...form, relationship: e.target.value })}
+                placeholder="Parent, sibling, friend"
+                className="h-11"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="contact-phone">Mobile number</Label>
+              <div className="flex gap-2">
+                <Input
+                  aria-label="Country code"
+                  value={form.country_code}
+                  onChange={(e) => setForm({ ...form, country_code: e.target.value })}
+                  className="h-11 w-20"
+                />
+                <Input
+                  id="contact-phone"
+                  inputMode="numeric"
+                  value={form.phone_number}
+                  onChange={(e) => setForm({ ...form, phone_number: e.target.value })}
+                  placeholder="9876543210"
+                  className="h-11 flex-1"
+                />
+              </div>
+            </div>
+            <Button type="submit" disabled={add.isPending} className="h-11 w-full">
+              {add.isPending ? t("common.loading") : t("common.add")}
+            </Button>
+          </form>
+        )}
       </SectionCard>
     </AppShell>
   );

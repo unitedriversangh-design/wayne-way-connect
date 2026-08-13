@@ -10,6 +10,7 @@ import { EmptyState, SectionCard } from "@/components/ui-kit";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { LocationPicker, type PickedPoint } from "@/components/location-picker";
 
 export const Route = createFileRoute("/_authenticated/profile/saved-places")({
   head: () => ({
@@ -32,10 +33,8 @@ function SavedPlaces() {
   const [form, setForm] = useState({
     label: "HOME" as (typeof LABELS)[number],
     name: "",
-    address: "",
-    latitude: "",
-    longitude: "",
   });
+  const [point, setPoint] = useState<PickedPoint | null>(null);
 
   const places = useQuery({
     queryKey: ["saved_places"],
@@ -51,26 +50,24 @@ function SavedPlaces() {
 
   const add = useMutation({
     mutationFn: async () => {
-      const lat = Number(form.latitude);
-      const lng = Number(form.longitude);
-      if (!form.name.trim() || !form.address.trim()) throw new Error("Name and address are required.");
-      if (!Number.isFinite(lat) || lat < -90 || lat > 90) throw new Error("Latitude must be between -90 and 90.");
-      if (!Number.isFinite(lng) || lng < -180 || lng > 180)
-        throw new Error("Longitude must be between -180 and 180.");
+      if (!form.name.trim()) throw new Error("A name is required.");
+      if (!point) throw new Error("Choose where this place is first.");
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) throw new Error("Please sign in again.");
       const { error } = await supabase.from("saved_places").insert({
         user_id: userData.user.id,
         label: form.label,
         name: form.name.trim(),
-        address: form.address.trim(),
-        latitude: lat,
-        longitude: lng,
+        address: point.address,
+        latitude: point.latitude,
+        longitude: point.longitude,
+        place_identifier: point.source,
       });
       if (error) throw error;
     },
     onSuccess: () => {
-      setForm({ label: "HOME", name: "", address: "", latitude: "", longitude: "" });
+      setForm({ label: "HOME", name: "" });
+      setPoint(null);
       toast.success("Place saved");
       void queryClient.invalidateQueries({ queryKey: ["saved_places"] });
     },
@@ -133,7 +130,7 @@ function SavedPlaces() {
       <SectionCard
         className="mt-4"
         title="Add a place"
-        description="Map search is not wired up yet, so coordinates are entered manually for now."
+        description="Search an address or use your current location — the coordinates are recorded automatically."
       >
         <form
           className="space-y-4"
@@ -165,43 +162,18 @@ function SavedPlaces() {
               id="place-name"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
+              placeholder="Home, office, gym…"
               className="h-11"
             />
           </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="place-address">Address</Label>
-            <Input
-              id="place-address"
-              value={form.address}
-              onChange={(e) => setForm({ ...form, address: e.target.value })}
-              className="h-11"
-            />
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-1.5">
-              <Label htmlFor="lat">Latitude</Label>
-              <Input
-                id="lat"
-                inputMode="decimal"
-                value={form.latitude}
-                onChange={(e) => setForm({ ...form, latitude: e.target.value })}
-                placeholder="19.07600"
-                className="h-11"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="lng">Longitude</Label>
-              <Input
-                id="lng"
-                inputMode="decimal"
-                value={form.longitude}
-                onChange={(e) => setForm({ ...form, longitude: e.target.value })}
-                placeholder="72.87770"
-                className="h-11"
-              />
-            </div>
-          </div>
-          <Button type="submit" disabled={add.isPending} className="h-11 w-full">
+          <LocationPicker
+            id="place-location"
+            label="Location"
+            value={point}
+            onChange={setPoint}
+            allowCurrentLocation
+          />
+          <Button type="submit" disabled={add.isPending || !point} className="h-11 w-full">
             {add.isPending ? t("common.loading") : t("common.add")}
           </Button>
         </form>

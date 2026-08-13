@@ -73,9 +73,10 @@ function Landing() {
         <div className="mt-8 flex flex-col gap-3 rounded-2xl border border-border bg-surface px-5 py-4 text-sm text-surface-foreground sm:flex-row sm:items-center">
           <ShieldCheck className="size-5 shrink-0 text-primary" aria-hidden />
           <p>
-            Booking for bike, auto and bus is not live yet. What works today is the real WayneWay
-            account system: email code sign-in, saved places, emergency contacts, device management,
-            notification preferences, data export and account deletion.
+            Bike rides are live — book, match with a nearby rider, track the trip and pay your rider
+            directly. Auto and bus travel, plus in-app payments, arrive in later phases. Your
+            WayneWay account system (saved places, emergency contacts, devices, data controls) works
+            today.
           </p>
         </div>
 
