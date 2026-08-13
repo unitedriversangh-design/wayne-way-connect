@@ -42,8 +42,7 @@ export const estimateBikeRide = createServerFn({ method: "POST" })
     const [service, fare] = await Promise.all([R.getServiceConfig("BIKE"), R.getFareConfig("BIKE")]);
     if (!service.is_enabled) throw R.rideError("SERVICE_UNAVAILABLE");
 
-    const straightMetres =
-      R.haversineKmOf(data.pickup, data.destination) * 1000;
+    const straightMetres = R.haversineKm(data.pickup, data.destination) * 1000;
     if (straightMetres < service.min_trip_distance_metres) {
       throw R.rideError("PICKUP_TOO_CLOSE");
     }
@@ -82,7 +81,7 @@ export const createBikeBooking = createServerFn({ method: "POST" })
     const [service, fare] = await Promise.all([R.getServiceConfig("BIKE"), R.getFareConfig("BIKE")]);
     if (!service.is_enabled) throw R.rideError("SERVICE_UNAVAILABLE");
 
-    const straightMetres = R.haversineKmOf(data.pickup, data.destination) * 1000;
+    const straightMetres = R.haversineKm(data.pickup, data.destination) * 1000;
     if (straightMetres < service.min_trip_distance_metres) throw R.rideError("PICKUP_TOO_CLOSE");
 
     const route = await R.calculateRoute(data.pickup, data.destination, fare);
@@ -316,7 +315,6 @@ export const getDriverContext = createServerFn({ method: "GET" })
         .maybeSingle(),
     ]);
 
-    let currentRide = null as null | Record<string, unknown>;
     const { data: active } = await supabaseAdmin
       .from("bookings")
       .select(
@@ -327,13 +325,11 @@ export const getDriverContext = createServerFn({ method: "GET" })
       .order("accepted_at", { ascending: false })
       .limit(1)
       .maybeSingle();
-    if (active) currentRide = active;
-
     return {
       profile: profile ?? null,
       vehicle: vehicle ?? null,
       availability: availability ?? null,
-      currentRide,
+      currentRide: active ?? null,
     };
   });
 
