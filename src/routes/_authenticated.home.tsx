@@ -6,8 +6,9 @@ import { useSession } from "@/lib/session";
 import { useI18n } from "@/lib/i18n";
 import { AppShell } from "@/components/app-shell";
 import { SectionCard } from "@/components/ui-kit";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { listCustomerRides } from "@/lib/ride.functions";
+import { formatMoney, isActive, STATUS_LABEL, type BookingStatus } from "@/lib/ride-shared";
+
 
 export const Route = createFileRoute("/_authenticated/home")({
   head: () => ({
