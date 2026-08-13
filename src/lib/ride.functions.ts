@@ -9,6 +9,7 @@ import {
   driverLocationSchema,
   driverRegistrationSchema,
   estimateSchema,
+  placeSearchSchema,
   startRideSchema,
 } from "./ride-schemas";
 import { haversineKm } from "./ride-shared";
@@ -842,4 +843,36 @@ export const listDriverRides = createServerFn({ method: "GET" })
       .limit(50);
     if (error) throw new Error("INVALID_RIDE_STATE");
     return data ?? [];
+  });
+
+/**
+ * Address lookup for pickup/destination selection. Runs server-side so the
+ * geocoding provider stays configurable and is never called from the browser.
+ */
+export const searchPlaces = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => placeSearchSchema.parse(input))
+  .handler(async ({ data }) => {
+    const base = process.env["GEOCODER_URL"] ?? "https://nominatim.openstreetmap.org/search";
+    const url = `${base}?format=json&addressdetails=0&limit=6&countrycodes=in&q=${encodeURIComponent(data.query)}`;
+    try {
+      const response = await fetch(url, {
+        headers: { "User-Agent": "WayneWay/0.1 (ride booking)", Accept: "application/json" },
+        signal: AbortSignal.timeout(6000),
+      });
+      if (!response.ok) return { results: [] as { label: string; latitude: number; longitude: number }[] };
+      const body = (await response.json()) as { display_name: string; lat: string; lon: string }[];
+      return {
+        results: body
+          .map((row) => ({
+            label: row.display_name,
+            latitude: Number(row.lat),
+            longitude: Number(row.lon),
+          }))
+          .filter((row) => Number.isFinite(row.latitude) && Number.isFinite(row.longitude)),
+      };
+    } catch (error) {
+      console.error("[ride] place search failed", error);
+      return { results: [] as { label: string; latitude: number; longitude: number }[] };
+    }
   });
