@@ -9,6 +9,7 @@ import {
   canTransitionBusBooking,
   canTransitionSchedule,
   cancellationFeePercent,
+  canView,
   canWrite,
   COMMITTED_BOOKING_STATUSES,
   DEFAULT_TAX_PERCENT,
@@ -63,7 +64,6 @@ export async function operatorContext(userId: string): Promise<OperatorContext> 
 
 /** Read access: allowed while pending/suspended so the operator can see status. */
 export function requireView(ctx: OperatorContext, module: OperatorModule) {
-  const { canView } = require("./bus-shared") as typeof import("./bus-shared");
   if (!canView(ctx.role, module)) throw busError("FORBIDDEN");
 }
 
@@ -132,7 +132,7 @@ export async function ownedRow<T extends Record<string, unknown>>(
     .maybeSingle();
   if (error) throw busError("NOT_FOUND", error.message);
   if (!data) throw busError("NOT_FOUND");
-  return data as T;
+  return data as unknown as T;
 }
 
 // ---------------------------------------------------------------- seat layout
