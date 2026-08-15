@@ -132,7 +132,7 @@ export async function ownedRow<T extends Record<string, unknown>>(
     .maybeSingle();
   if (error) throw busError("NOT_FOUND", error.message);
   if (!data) throw busError("NOT_FOUND");
-  return data as T;
+  return data as unknown as T;
 }
 
 // ---------------------------------------------------------------- seat layout
