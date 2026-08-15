@@ -9,6 +9,7 @@ import {
   canTransitionBusBooking,
   canTransitionSchedule,
   cancellationFeePercent,
+  canView,
   canWrite,
   COMMITTED_BOOKING_STATUSES,
   DEFAULT_TAX_PERCENT,
