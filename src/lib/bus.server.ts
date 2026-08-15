@@ -63,7 +63,6 @@ export async function operatorContext(userId: string): Promise<OperatorContext> 
 
 /** Read access: allowed while pending/suspended so the operator can see status. */
 export function requireView(ctx: OperatorContext, module: OperatorModule) {
-  const { canView } = require("./bus-shared") as typeof import("./bus-shared");
   if (!canView(ctx.role, module)) throw busError("FORBIDDEN");
 }
 
