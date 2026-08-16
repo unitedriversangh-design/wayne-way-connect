@@ -348,7 +348,7 @@ export const updateBus = createServerFn({ method: "POST" })
     if (data.assignedDriverId !== undefined) patch["assigned_driver_id"] = data.assignedDriverId;
     if (data.registrationNumber != null) patch["registration_number"] = data.registrationNumber.toUpperCase();
 
-    const { error } = await B.db().from("buses").update(patch).eq("id", data.busId).eq("operator_id", ctx.operatorId);
+    const { error } = await B.db().from("buses").update(patch as never).eq("id", data.busId).eq("operator_id", ctx.operatorId);
     if (error) {
       if (error.code === "23505") throw new Error("DUPLICATE_REGISTRATION");
       throw new Error("NOT_FOUND");
@@ -537,7 +537,7 @@ export const updateDriver = createServerFn({ method: "POST" })
     if (data.licenceExpiry != null) patch["licence_expiry"] = data.licenceExpiry;
     if (data.status != null) patch["status"] = data.status;
     if (data.documentStatus != null) patch["document_status"] = data.documentStatus;
-    const { error } = await B.db().from("bus_drivers").update(patch).eq("id", data.driverId).eq("operator_id", ctx.operatorId);
+    const { error } = await B.db().from("bus_drivers").update(patch as never).eq("id", data.driverId).eq("operator_id", ctx.operatorId);
     if (error) throw new Error("NOT_FOUND");
     await B.audit(ctx, "DRIVER_UPDATED", "bus_driver", data.driverId, patch);
     return { ok: true };
@@ -644,7 +644,7 @@ export const updateStop = createServerFn({ method: "POST" })
     if (data.latitude != null) patch["latitude"] = data.latitude;
     if (data.longitude != null) patch["longitude"] = data.longitude;
     if (data.isActive != null) patch["is_active"] = data.isActive;
-    await B.db().from("bus_stops").update(patch).eq("id", data.stopId).eq("operator_id", ctx.operatorId);
+    await B.db().from("bus_stops").update(patch as never).eq("id", data.stopId).eq("operator_id", ctx.operatorId);
     await B.audit(ctx, "STOP_UPDATED", "bus_stop", data.stopId, patch);
     return { ok: true };
   });
@@ -742,7 +742,7 @@ export const updateRoute = createServerFn({ method: "POST" })
     if (data.estimatedDurationMinutes != null) patch["estimated_duration_minutes"] = data.estimatedDurationMinutes;
     if (data.baseFare != null) patch["base_fare"] = data.baseFare;
     if (data.status != null) patch["status"] = data.status;
-    await B.db().from("bus_routes").update(patch).eq("id", data.routeId).eq("operator_id", ctx.operatorId);
+    await B.db().from("bus_routes").update(patch as never).eq("id", data.routeId).eq("operator_id", ctx.operatorId);
     await B.audit(ctx, "ROUTE_UPDATED", "bus_route", data.routeId, patch);
     return { ok: true };
   });
@@ -939,7 +939,7 @@ export const updateSchedule = createServerFn({ method: "POST" })
       patch["base_fare"] = data.baseFare;
     }
 
-    await B.db().from("bus_schedules").update(patch).eq("id", data.scheduleId).eq("operator_id", ctx.operatorId);
+    await B.db().from("bus_schedules").update(patch as never).eq("id", data.scheduleId).eq("operator_id", ctx.operatorId);
     await B.audit(ctx, "SCHEDULE_UPDATED", "bus_schedule", data.scheduleId, patch);
     return { ok: true };
   });
@@ -1154,7 +1154,7 @@ export const updateDiscount = createServerFn({ method: "POST" })
     if (data.name != null) patch["name"] = data.name;
     if (data.value != null) patch["value"] = data.value;
     if (data.endsAt !== undefined) patch["ends_at"] = data.endsAt;
-    await B.db().from("bus_discounts").update(patch).eq("id", data.discountId).eq("operator_id", ctx.operatorId);
+    await B.db().from("bus_discounts").update(patch as never).eq("id", data.discountId).eq("operator_id", ctx.operatorId);
     await B.audit(ctx, "DISCOUNT_UPDATED", "bus_discount", data.discountId, patch);
     return { ok: true };
   });
@@ -1596,7 +1596,7 @@ export const updateOperatorStaff = createServerFn({ method: "POST" })
     const patch: Record<string, unknown> = {};
     if (data.role != null) patch["role"] = data.role;
     if (data.isActive != null) patch["is_active"] = data.isActive;
-    await B.db().from("operator_staff").update(patch).eq("id", data.staffId).eq("operator_id", ctx.operatorId);
+    await B.db().from("operator_staff").update(patch as never).eq("id", data.staffId).eq("operator_id", ctx.operatorId);
     await B.audit(ctx, "STAFF_UPDATED", "operator_staff", data.staffId, patch);
     return { ok: true };
   });
@@ -1618,8 +1618,8 @@ export const updateOperatorProfile = createServerFn({ method: "POST" })
     if (data.bankAccountName != null) patch["bank_account_name"] = data.bankAccountName;
     if (data.bankAccountLast4 != null) patch["bank_account_last4"] = data.bankAccountLast4;
     if (data.bankIfsc != null) patch["bank_ifsc"] = data.bankIfsc.toUpperCase();
-    await B.db().from("bus_operators").update(patch).eq("id", ctx.operatorId);
-    await B.audit(ctx, "OPERATOR_PROFILE_UPDATED", "bus_operator", ctx.operatorId, Object.keys(patch));
+    await B.db().from("bus_operators").update(patch as never).eq("id", ctx.operatorId);
+    await B.audit(ctx, "OPERATOR_PROFILE_UPDATED", "bus_operator", ctx.operatorId, { fields: Object.keys(patch) });
     return { ok: true };
   });
 
