@@ -163,7 +163,7 @@ function SidebarLinks({
         return (
           <li key={item.to}>
             <Link
-              to={item.to}
+              to={item.to as never}
               aria-current={active ? "page" : undefined}
               className={cn(
                 "focus-ring flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold",
@@ -198,7 +198,7 @@ export function OperatorGate({
 
   useEffect(() => {
     if (session.data && !session.data.registered) {
-      navigate({ to: "/operator/register", replace: true });
+      navigate({ to: "/operator/register" as never, replace: true });
     }
   }, [session.data, navigate]);
 
@@ -280,7 +280,7 @@ export function StatCard({
     </div>
   );
   return to ? (
-    <Link to={to} className="focus-ring block rounded-2xl">
+    <Link to={to as never} className="focus-ring block rounded-2xl">
       {body}
     </Link>
   ) : (
@@ -466,7 +466,7 @@ export function ConfirmAction({
       <div className="mt-3 flex gap-2">
         <PrimaryButton
           type="button"
-          loading={loading}
+          loading={loading ?? false}
           onClick={() => {
             onConfirm();
             setAsking(false);
