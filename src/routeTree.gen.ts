@@ -17,6 +17,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated.home'
 import { Route as AuthenticatedRidesRouteImport } from './routes/_authenticated.rides'
 import { Route as AuthenticatedBusIndexRouteImport } from './routes/_authenticated.bus.index'
+import { Route as AuthenticatedBusScheduleIdRouteImport } from './routes/_authenticated.bus.$scheduleId'
 import { Route as AuthenticatedBusBookingsRouteImport } from './routes/_authenticated.bus.bookings'
 import { Route as AuthenticatedDriveIndexRouteImport } from './routes/_authenticated.drive.index'
 import { Route as AuthenticatedDriveRidesRouteImport } from './routes/_authenticated.drive.rides'
@@ -69,6 +70,12 @@ const AuthenticatedBusIndexRoute = AuthenticatedBusIndexRouteImport.update({
   path: '/bus/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedBusScheduleIdRoute =
+  AuthenticatedBusScheduleIdRouteImport.update({
+    id: '/bus/$scheduleId',
+    path: '/bus/$scheduleId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedBusBookingsRoute =
   AuthenticatedBusBookingsRouteImport.update({
     id: '/bus/bookings',
@@ -146,6 +153,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/home': typeof AuthenticatedHomeRoute
   '/rides': typeof AuthenticatedRidesRoute
+  '/bus/$scheduleId': typeof AuthenticatedBusScheduleIdRoute
   '/bus/bookings': typeof AuthenticatedBusBookingsRoute
   '/drive/rides': typeof AuthenticatedDriveRidesRoute
   '/profile/devices': typeof AuthenticatedProfileDevicesRoute
@@ -167,6 +175,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/home': typeof AuthenticatedHomeRoute
   '/rides': typeof AuthenticatedRidesRoute
+  '/bus/$scheduleId': typeof AuthenticatedBusScheduleIdRoute
   '/bus/bookings': typeof AuthenticatedBusBookingsRoute
   '/drive/rides': typeof AuthenticatedDriveRidesRoute
   '/profile/devices': typeof AuthenticatedProfileDevicesRoute
@@ -190,6 +199,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/_authenticated/home': typeof AuthenticatedHomeRoute
   '/_authenticated/rides': typeof AuthenticatedRidesRoute
+  '/_authenticated/bus/$scheduleId': typeof AuthenticatedBusScheduleIdRoute
   '/_authenticated/bus/bookings': typeof AuthenticatedBusBookingsRoute
   '/_authenticated/drive/rides': typeof AuthenticatedDriveRidesRoute
   '/_authenticated/profile/devices': typeof AuthenticatedProfileDevicesRoute
@@ -213,6 +223,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/home'
     | '/rides'
+    | '/bus/$scheduleId'
     | '/bus/bookings'
     | '/drive/rides'
     | '/profile/devices'
@@ -234,6 +245,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/home'
     | '/rides'
+    | '/bus/$scheduleId'
     | '/bus/bookings'
     | '/drive/rides'
     | '/profile/devices'
@@ -256,6 +268,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/_authenticated/home'
     | '/_authenticated/rides'
+    | '/_authenticated/bus/$scheduleId'
     | '/_authenticated/bus/bookings'
     | '/_authenticated/drive/rides'
     | '/_authenticated/profile/devices'
@@ -335,6 +348,13 @@ declare module '@tanstack/react-router' {
       path: '/bus'
       fullPath: '/bus/'
       preLoaderRoute: typeof AuthenticatedBusIndexRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/bus/$scheduleId': {
+      id: '/_authenticated/bus/$scheduleId'
+      path: '/bus/$scheduleId'
+      fullPath: '/bus/$scheduleId'
+      preLoaderRoute: typeof AuthenticatedBusScheduleIdRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/bus/bookings': {
@@ -427,6 +447,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
   AuthenticatedRidesRoute: typeof AuthenticatedRidesRoute
+  AuthenticatedBusScheduleIdRoute: typeof AuthenticatedBusScheduleIdRoute
   AuthenticatedBusBookingsRoute: typeof AuthenticatedBusBookingsRoute
   AuthenticatedDriveRidesRoute: typeof AuthenticatedDriveRidesRoute
   AuthenticatedProfileDevicesRoute: typeof AuthenticatedProfileDevicesRoute
@@ -445,6 +466,7 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,
   AuthenticatedRidesRoute: AuthenticatedRidesRoute,
+  AuthenticatedBusScheduleIdRoute: AuthenticatedBusScheduleIdRoute,
   AuthenticatedBusBookingsRoute: AuthenticatedBusBookingsRoute,
   AuthenticatedDriveRidesRoute: AuthenticatedDriveRidesRoute,
   AuthenticatedProfileDevicesRoute: AuthenticatedProfileDevicesRoute,
