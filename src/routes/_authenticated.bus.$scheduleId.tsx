@@ -505,7 +505,11 @@ function BusSchedulePage() {
                 Seats held for {Math.floor(holdSecondsLeft / 60)}:{String(holdSecondsLeft % 60).padStart(2, "0")}
               </p>
             )}
-            {quote ? <div className="mt-3">{<FareBreakdown fare={quote} /></div>} : null}
+            {quote ? (
+              <div className="mt-3">
+                <FareBreakdown fare={quote} />
+              </div>
+            ) : null}
             <ul className="mt-3 space-y-1 text-xs text-muted-foreground">
               {describeCancellationPolicy().map((line) => (
                 <li key={line}>• {line}</li>
