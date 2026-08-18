@@ -30,6 +30,7 @@ import { Route as AuthenticatedProfilePrivacyDataRouteImport } from './routes/_a
 import { Route as AuthenticatedProfileSavedPlacesRouteImport } from './routes/_authenticated.profile.saved-places'
 import { Route as AuthenticatedRideBookingIdRouteImport } from './routes/_authenticated.ride.$bookingId'
 import { Route as AuthenticatedRideNewRouteImport } from './routes/_authenticated.ride.new'
+import { Route as AuthenticatedBusBookingBookingIdRouteImport } from './routes/_authenticated.bus.booking.$bookingId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -145,6 +146,12 @@ const AuthenticatedRideNewRoute = AuthenticatedRideNewRouteImport.update({
   path: '/ride/new',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedBusBookingBookingIdRoute =
+  AuthenticatedBusBookingBookingIdRouteImport.update({
+    id: '/bus/booking/$bookingId',
+    path: '/bus/booking/$bookingId',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -167,6 +174,7 @@ export interface FileRoutesByFullPath {
   '/bus/': typeof AuthenticatedBusIndexRoute
   '/drive/': typeof AuthenticatedDriveIndexRoute
   '/profile/': typeof AuthenticatedProfileIndexRoute
+  '/bus/booking/$bookingId': typeof AuthenticatedBusBookingBookingIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -189,6 +197,7 @@ export interface FileRoutesByTo {
   '/bus': typeof AuthenticatedBusIndexRoute
   '/drive': typeof AuthenticatedDriveIndexRoute
   '/profile': typeof AuthenticatedProfileIndexRoute
+  '/bus/booking/$bookingId': typeof AuthenticatedBusBookingBookingIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -213,6 +222,7 @@ export interface FileRoutesById {
   '/_authenticated/bus/': typeof AuthenticatedBusIndexRoute
   '/_authenticated/drive/': typeof AuthenticatedDriveIndexRoute
   '/_authenticated/profile/': typeof AuthenticatedProfileIndexRoute
+  '/_authenticated/bus/booking/$bookingId': typeof AuthenticatedBusBookingBookingIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -237,6 +247,7 @@ export interface FileRouteTypes {
     | '/bus/'
     | '/drive/'
     | '/profile/'
+    | '/bus/booking/$bookingId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -259,6 +270,7 @@ export interface FileRouteTypes {
     | '/bus'
     | '/drive'
     | '/profile'
+    | '/bus/booking/$bookingId'
   id:
     | '__root__'
     | '/'
@@ -282,6 +294,7 @@ export interface FileRouteTypes {
     | '/_authenticated/bus/'
     | '/_authenticated/drive/'
     | '/_authenticated/profile/'
+    | '/_authenticated/bus/booking/$bookingId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -441,6 +454,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRideNewRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/bus/booking/$bookingId': {
+      id: '/_authenticated/bus/booking/$bookingId'
+      path: '/bus/booking/$bookingId'
+      fullPath: '/bus/booking/$bookingId'
+      preLoaderRoute: typeof AuthenticatedBusBookingBookingIdRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
@@ -461,6 +481,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedBusIndexRoute: typeof AuthenticatedBusIndexRoute
   AuthenticatedDriveIndexRoute: typeof AuthenticatedDriveIndexRoute
   AuthenticatedProfileIndexRoute: typeof AuthenticatedProfileIndexRoute
+  AuthenticatedBusBookingBookingIdRoute: typeof AuthenticatedBusBookingBookingIdRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
@@ -482,6 +503,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedBusIndexRoute: AuthenticatedBusIndexRoute,
   AuthenticatedDriveIndexRoute: AuthenticatedDriveIndexRoute,
   AuthenticatedProfileIndexRoute: AuthenticatedProfileIndexRoute,
+  AuthenticatedBusBookingBookingIdRoute: AuthenticatedBusBookingBookingIdRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
